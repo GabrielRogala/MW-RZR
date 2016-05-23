@@ -13,6 +13,12 @@ public class Automat3DForm extends javax.swing.JFrame {
 
     static final int size_x = 500;
     static final int size_y = 300;
+    static final double reA = 86710969050178.5;
+    static final double reB = 9.41268203527779;
+    static final double roMax = 28105600.95;
+    double dT = 0;
+    double ro = 0;
+    double roSr = 0;
     static int n = 0;
     Random rand = new Random();
     HandlerClass handler = new HandlerClass();
@@ -21,6 +27,7 @@ public class Automat3DForm extends javax.swing.JFrame {
     Grain boardGrain[][];
 //    int board[][];
     int board_tmp[][];
+    Grain boardGrain_tmp[][];
     int area = 0;
     int _r = 0;
     boolean simLoop;
@@ -30,10 +37,11 @@ public class Automat3DForm extends javax.swing.JFrame {
 //        board = new int[size_x][size_y];
 
         boardGrain = new Grain[size_x][size_y];
-
+        boardGrain_tmp = new Grain[size_x][size_y];
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
                 boardGrain[i][j] = new Grain();
+                boardGrain_tmp[i][j] = new Grain();
             }
         }
 
@@ -61,6 +69,7 @@ public class Automat3DForm extends javax.swing.JFrame {
         ClearButton = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox();
         randomCombo = new javax.swing.JComboBox();
+        recrystalButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         canvas1 = new automat3d.Canvas();
         jPanel6 = new javax.swing.JPanel();
@@ -182,6 +191,17 @@ public class Automat3DForm extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         jPanel2.add(randomCombo, gridBagConstraints);
+
+        recrystalButton.setText("Rekrystalizacja");
+        recrystalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recrystalButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
+        jPanel2.add(recrystalButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -436,6 +456,20 @@ public class Automat3DForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jComboBox1PopupMenuWillBecomeInvisible
 
+    private void recrystalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recrystalButtonActionPerformed
+        if (t != null) {
+            t.stop();
+        }
+
+        t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                reSim();
+            }
+        });
+        t.start();
+    }//GEN-LAST:event_recrystalButtonActionPerformed
+
     private void sim() {
         simLoop = true;
         while (simLoop) {
@@ -457,13 +491,15 @@ public class Automat3DForm extends javax.swing.JFrame {
         }
     }
 
-    private void recrystal() {
+    private void reSim() {
         simLoop = true;
         while (simLoop) {
+            dT += 0.001;
             simLoop = false;
             reCalculate();
             canvas1.setGrains(boardGrain);
             canvas1.repaint();
+
             try {
                 t.sleep(50);
             } catch (InterruptedException ex) {
@@ -720,15 +756,46 @@ public class Automat3DForm extends javax.swing.JFrame {
     }
 
     private void reCalculate() {
+        /*
+         1 przestrzeń wypełniona ziarnami
+         2 obliczenie gestosci dyslokacji (a/b + 1-...(t).) t<- krok czasowy 0.001 ,0.002 ...
+         3 rozlosowanie odpowiedniczh paczek do pol
+         4 ro se = ro z wszystkich / ilosc pixeli
+         5 ro na granicach  ro wewnątrz       
+         6 --- sprawdzamy czy ro w danej kom przekroczyło 
+         mogo rekrystalizowac tylko te ne granicy (po rektyst ro = 0)
+         jezeli sasiad zrekrystalizował w poprzednim kroku to tez rekrystalizuje
+         */
+
+        ro = reA / reB + (1 - (reA / reB)) * Math.exp(-1 * reB * dT);
+        roSr = ro / (size_x * size_y);
 
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
-                
+                if (boardGrain[i][j].isB()) {
+                    boardGrain[i][j].addRo(roSr * (1.2 + rand.nextDouble() * 0.6));
+                    if (boardGrain[i][j].getRo() > roMax) {
+                        n++;
+                        boardGrain[i][j].setId(n);
+                        boardGrain[i][j].setB(false);
+                        boardGrain[i][j].setR(true);
+                        boardGrain[i][j].setRo(0);
+                        simLoop = true;
+                    }
+                } else {
+                    boardGrain[i][j].addRo(roSr * (rand.nextDouble() * 0.3));
+                }
             }
         }
-        
+
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                boardGrain_tmp[i][j].setId(boardGrain[i][j].getId());
+            }
+        }
+
         int tmp[][] = new int[3][3];
-        
+
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
 
@@ -736,31 +803,50 @@ public class Automat3DForm extends javax.swing.JFrame {
                     for (int l = 0; l < 3; l++) {
                         int l_x = (size_x + (i - 1 + k)) % size_x;
                         int l_y = (size_y + (j - 1 + l)) % size_y;
-                        tmp[k][l] = boardGrain[l_x][l_y].getId();
+                        if (boardGrain[l_x][l_y].isR()) {
+                            tmp[k][l] = boardGrain[l_x][l_y].getId();
+                        } else {
+                            tmp[k][l] = 0;
+                        }
                     }
                 }
                 if (!perio) {
-                        if (i == 0) {
-                            for (int k = 0; k < 3; k++) {
-                                tmp[0][k] = 0;
-                            }
-                        }
-                        if (j == 0) {
-                            for (int k = 0; k < 3; k++) {
-                                tmp[k][0] = 0;
-                            }
-                        }
-                        if (i == size_x - 1) {
-                            for (int k = 0; k < 3; k++) {
-                                tmp[2][k] = 0;
-                            }
-                        }
-                        if (j == size_y - 1) {
-                            for (int k = 0; k < 3; k++) {
-                                tmp[k][2] = 0;
-                            }
+                    if (i == 0) {
+                        for (int k = 0; k < 3; k++) {
+                            tmp[0][k] = 0;
                         }
                     }
+                    if (j == 0) {
+                        for (int k = 0; k < 3; k++) {
+                            tmp[k][0] = 0;
+                        }
+                    }
+                    if (i == size_x - 1) {
+                        for (int k = 0; k < 3; k++) {
+                            tmp[2][k] = 0;
+                        }
+                    }
+                    if (j == size_y - 1) {
+                        for (int k = 0; k < 3; k++) {
+                            tmp[k][2] = 0;
+                        }
+                    }
+                }
+
+                //----------------------------
+                boardGrain_tmp[i][j].setId(area(tmp));
+            }
+        }
+
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                if (boardGrain_tmp[i][j].getId() > 0) {
+                    boardGrain[i][j].setId(boardGrain_tmp[i][j].getId());
+                    boardGrain[i][j].setB(false);
+                    boardGrain[i][j].setR(true);
+                    boardGrain[i][j].setRo(0);
+                    simLoop = true;
+                }
 
             }
         }
@@ -1035,6 +1121,7 @@ public class Automat3DForm extends javax.swing.JFrame {
     private javax.swing.JTextField radiusText;
     private javax.swing.JComboBox randomCombo;
     private javax.swing.JTextField randomSizeText;
+    private javax.swing.JButton recrystalButton;
     private javax.swing.JTextField ringSizeField;
     // End of variables declaration//GEN-END:variables
 }

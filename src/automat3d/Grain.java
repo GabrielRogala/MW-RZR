@@ -3,7 +3,7 @@ package automat3d;
 public class Grain {
 
     private int id = 0;
-    private int ro = 0;
+    private double ro = 0;
     private boolean b = false;
     private boolean r = false;
    
@@ -15,11 +15,11 @@ public class Grain {
         this.id = id;
     }
 
-    public int getRo() {
+    public double getRo() {
         return ro;
     }
 
-    public void setRo(int ro) {
+    public void setRo(double ro) {
         this.ro = ro;
     }
 
@@ -37,6 +37,10 @@ public class Grain {
 
     public void setR(boolean r) {
         this.r = r;
+    }
+    
+    public void addRo(double ro){
+        this.ro +=ro;
     }
     
     
