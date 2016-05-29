@@ -334,14 +334,16 @@ public class Board {
 
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
-                if (areaSetup == 7) {
-                    tmp = createArea(i, j, 6, true);
-                    board_tmp[i][j] = area(tmp);
-                } else {
-                    tmp = createArea(i, j, areaSetup, true);
-                    board_tmp[i][j] = area(tmp);
+                if (!boardGrain[i][j].isR()){
+                    if (areaSetup == 7) {
+                        tmp = createArea(i, j, 6, true);
+                        board_tmp[i][j] = area(tmp);
+                    } else {
+                        tmp = createArea(i, j, areaSetup, true);
+                        board_tmp[i][j] = area(tmp);
+                    }
+                    boardGrain_tmp[i][j].setId(board_tmp[i][j]);
                 }
-                boardGrain_tmp[i][j].setId(board_tmp[i][j]);
             }
         }
 

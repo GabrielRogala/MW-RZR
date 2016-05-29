@@ -513,7 +513,7 @@ public class Automat3DForm extends javax.swing.JFrame {
 // -----------------------------------------------------------------------
 // -----------------------------------------------------------------------  
 // -----------------------Na wielu wątkach ----------------------------------
-            boardGrain = board.calculate(jComboBox1.getSelectedIndex(),
+            boardGrain = board.THcalculate(jComboBox1.getSelectedIndex(),
                     Integer.parseInt(radiusText.getText()));
 // -----------------------------------------------------------------------
             progress = (double) board.crystal() / (size_x * size_y) * 100;
