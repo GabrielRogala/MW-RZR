@@ -512,6 +512,9 @@ public class Automat3DForm extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Ustawianie granic ziaren
+     */
     private void b() {
         for (int i = 1; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
@@ -766,15 +769,18 @@ public class Automat3DForm extends javax.swing.JFrame {
          mogo rekrystalizowac tylko te ne granicy (po rektyst ro = 0)
          jezeli sasiad zrekrystalizował w poprzednim kroku to tez rekrystalizuje
          */
-
+        
         ro = reA / reB + (1 - (reA / reB)) * Math.exp(-1 * reB * dT);
         roSr = ro / (size_x * size_y);
-
+        System.out.println("czas :"+dT+" : "+ro+" : "+roSr);
+        simLoop = false;
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
                 if (boardGrain[i][j].isB()) {
                     boardGrain[i][j].addRo(roSr * (1.2 + rand.nextDouble() * 0.6));
+                    System.out.println("ro : "+boardGrain[i][j].getRo());
                     if (boardGrain[i][j].getRo() > roMax) {
+                        System.out.println("max : ["+i+"]["+j+"] = "+boardGrain[i][j].getRo());
                         n++;
                         boardGrain[i][j].setId(n);
                         boardGrain[i][j].setB(false);
@@ -784,6 +790,7 @@ public class Automat3DForm extends javax.swing.JFrame {
                     }
                 } else {
                     boardGrain[i][j].addRo(roSr * (rand.nextDouble() * 0.3));
+                    simLoop = true;
                 }
             }
         }
@@ -832,7 +839,7 @@ public class Automat3DForm extends javax.swing.JFrame {
                         }
                     }
                 }
-
+                simLoop = true;
                 //----------------------------
                 boardGrain_tmp[i][j].setId(area(tmp));
             }
