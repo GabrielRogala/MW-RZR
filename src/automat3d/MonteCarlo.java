@@ -14,6 +14,20 @@ public class MonteCarlo {
     ArrayList<BoardPoint> grains;
     private int changed;
 
+    public MonteCarlo(int size_x, int size_y, Grain[][] boardGrain) {
+        this.boardGrain = new Grain[size_x][size_y];
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                boardGrain[i][j] = new Grain();
+            }
+        }
+        this.size_x = size_x;
+        this.size_y = size_y;
+        this.boardGrain = boardGrain;
+        rand = new Random();
+        grains = new ArrayList<BoardPoint>();
+    }
+    
     public void changePerio() {
         this.perio = !perio;
     }

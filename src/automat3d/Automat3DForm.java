@@ -522,7 +522,7 @@ public class Automat3DForm extends javax.swing.JFrame {
 
     private void RandomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RandomButtonActionPerformed
         if (mC) {
-            monteCarlo = new MonteCarlo(size_x,size_y,50);
+            monteCarlo = new MonteCarlo(size_x, size_y, 50);
             boardGrain = monteCarlo.randomBoard();
             canvas1.setGrains(boardGrain);
             canvas1.repaint();
@@ -630,13 +630,13 @@ public class Automat3DForm extends javax.swing.JFrame {
 
         if (mC) {
             simLoop = true;
-            while(simLoop){
+            while (simLoop) {
                 boardGrain = monteCarlo.calculate();
                 canvas1.setGrains(boardGrain);
                 canvas1.repaint();
                 jProgressBar1.setForeground(Color.red);
-                jProgressBar1.setValue((int) ((1 - (double)monteCarlo.getChanged()/(size_x*size_y))*100));
-                if(monteCarlo.getChanged() == 0){
+                jProgressBar1.setValue((int) ((1 - (double) monteCarlo.getChanged() / (size_x * size_y)) * 100));
+                if (monteCarlo.getChanged() == 0) {
                     simLoop = false;
                     jProgressBar1.setForeground(Color.green);
                 }
@@ -684,32 +684,49 @@ public class Automat3DForm extends javax.swing.JFrame {
     }
 
     private void reSim() {
-        this.jProgressBar1.setValue(0);
-        simLoop = true;
-        double progress = 0;
-        jProgressBar1.setForeground(Color.red);
-        while (simLoop) {
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Automat3DForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-            dT += 0.001;
-            boardGrain = board.reCalculate(jComboBox1.getSelectedIndex(), dT);
-            progress = (double) board.recrystal() / (size_x * size_y) * 100;
-            jProgressBar1.setValue((int) Math.round(progress));
-            simLoop = board.recrystal() != (size_x * size_y);
-            canvas1.setGrains(boardGrain);
-            canvas1.repaint();
-            jLabel9.setText("" + board.getCountGrainsRecristal());
-            if (!simLoop) {
+        if (mC) {
+            monteCarlo = new MonteCarlo(size_x, size_y, boardGrain);
+            simLoop = true;
+            while (simLoop) {
+                boardGrain = monteCarlo.calculate();
+                canvas1.setGrains(boardGrain);
+                canvas1.repaint();
+                jProgressBar1.setForeground(Color.red);
+                jProgressBar1.setValue((int) ((1 - (double) monteCarlo.getChanged() / (size_x * size_y)) * 100));
+                if (monteCarlo.getChanged() == 0) {
+                    simLoop = false;
+                    jProgressBar1.setForeground(Color.green);
+                }
+            }
+        } else {
+            this.jProgressBar1.setValue(0);
+            simLoop = true;
+            double progress = 0;
+            jProgressBar1.setForeground(Color.red);
+            while (simLoop) {
+                try {
+                    Thread.sleep(30);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Automat3DForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                dT += 0.001;
+                boardGrain = board.reCalculate(jComboBox1.getSelectedIndex(), dT);
+                progress = (double) board.recrystal() / (size_x * size_y) * 100;
+                jProgressBar1.setValue((int) Math.round(progress));
+                simLoop = board.recrystal() != (size_x * size_y);
+                canvas1.setGrains(boardGrain);
+                canvas1.repaint();
+                jLabel9.setText("" + board.getCountGrainsRecristal());
+                if (!simLoop) {
 
 //                canvas1.setB(true);
-                boardGrain = board.edge();
-                board.clearRecrystal();
-                jProgressBar1.setForeground(Color.green);
-                t.stop();
+                    boardGrain = board.edge();
+                    board.clearRecrystal();
+                    jProgressBar1.setForeground(Color.green);
+                    t.stop();
+                }
             }
         }
 
