@@ -314,9 +314,9 @@ public class Automat3DForm extends javax.swing.JFrame {
         jPanel2.add(jToggleButton2, gridBagConstraints);
 
         jToggleButton3.setText("MC");
-        jToggleButton3.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jToggleButton3StateChanged(evt);
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -522,7 +522,7 @@ public class Automat3DForm extends javax.swing.JFrame {
 
     private void RandomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RandomButtonActionPerformed
         if (mC) {
-            monteCarlo = new MonteCarlo(size_x, size_y, 50);
+            monteCarlo = new MonteCarlo(size_x, size_y, Integer.parseInt(randomSizeText.getText()));
             boardGrain = monteCarlo.randomBoard();
             canvas1.setGrains(boardGrain);
             canvas1.repaint();
@@ -622,9 +622,10 @@ public class Automat3DForm extends javax.swing.JFrame {
         board.changeContentGrains();
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
-    private void jToggleButton3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton3StateChanged
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
         mC = !mC;
-    }//GEN-LAST:event_jToggleButton3StateChanged
+        this.jPanel5.setVisible(mC);
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
 
     private void sim() {
 

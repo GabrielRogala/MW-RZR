@@ -18,7 +18,7 @@ public class MonteCarlo {
         this.boardGrain = new Grain[size_x][size_y];
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
-                boardGrain[i][j] = new Grain();
+                this.boardGrain[i][j] = new Grain();
             }
         }
         this.size_x = size_x;
