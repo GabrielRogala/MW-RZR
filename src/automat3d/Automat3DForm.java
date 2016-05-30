@@ -521,20 +521,28 @@ public class Automat3DForm extends javax.swing.JFrame {
     }//GEN-LAST:event_StopButtonActionPerformed
 
     private void RandomButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RandomButtonActionPerformed
-        boardGrain = board.clear();
-        boardGrain = board.randomBoard(randomCombo.getSelectedIndex(),
-                Integer.parseInt(countXText.getText()),
-                Integer.parseInt(countYText.getText()),
-                Integer.parseInt(randomSizeText.getText()),
-                Integer.parseInt(ringSizeField.getText()),
-                Integer.parseInt(amountRingsField.getText()));
-        canvas1.setGrains(boardGrain);
-        canvas1.repaint();
-        jLabel9.setText("" + board.getCountGrainsCristal());
+        if (mC) {
+            monteCarlo = new MonteCarlo(size_x,size_y,50);
+            boardGrain = monteCarlo.randomBoard();
+            canvas1.setGrains(boardGrain);
+            canvas1.repaint();
+        } else {
+            boardGrain = board.clear();
+            boardGrain = board.randomBoard(randomCombo.getSelectedIndex(),
+                    Integer.parseInt(countXText.getText()),
+                    Integer.parseInt(countYText.getText()),
+                    Integer.parseInt(randomSizeText.getText()),
+                    Integer.parseInt(ringSizeField.getText()),
+                    Integer.parseInt(amountRingsField.getText()));
+            canvas1.setGrains(boardGrain);
+            canvas1.repaint();
+            jLabel9.setText("" + board.getCountGrainsCristal());
+        }
     }//GEN-LAST:event_RandomButtonActionPerformed
 
     private void BCsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BCsButtonActionPerformed
         board.changePeriodic();
+        monteCarlo.changePerio();
     }//GEN-LAST:event_BCsButtonActionPerformed
 
     private void ClearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearButtonActionPerformed
@@ -615,15 +623,24 @@ public class Automat3DForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     private void jToggleButton3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleButton3StateChanged
-        mC =!mC;
+        mC = !mC;
     }//GEN-LAST:event_jToggleButton3StateChanged
 
     private void sim() {
 
         if (mC) {
-            boardGrain = monteCarlo.randomBoard();
-            canvas1.setGrains(boardGrain);
-            canvas1.repaint();
+            simLoop = true;
+            while(simLoop){
+                boardGrain = monteCarlo.calculate();
+                canvas1.setGrains(boardGrain);
+                canvas1.repaint();
+                jProgressBar1.setForeground(Color.red);
+                jProgressBar1.setValue((int) ((1 - (double)monteCarlo.getChanged()/(size_x*size_y))*100));
+                if(monteCarlo.getChanged() == 0){
+                    simLoop = false;
+                    jProgressBar1.setForeground(Color.green);
+                }
+            }
         } else {
             this.jProgressBar1.setValue(0);
             simLoop = true;

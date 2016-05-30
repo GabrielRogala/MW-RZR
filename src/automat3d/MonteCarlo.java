@@ -12,6 +12,15 @@ public class MonteCarlo {
     private Random rand;
     private boolean perio;
     ArrayList<BoardPoint> grains;
+    private int changed;
+
+    public void changePerio() {
+        this.perio = !perio;
+    }
+
+    public int getChanged() {
+        return changed;
+    }
 
     public MonteCarlo(int size_x, int size_y, int n) {
         grains = new ArrayList<BoardPoint>();
@@ -47,25 +56,60 @@ public class MonteCarlo {
     public Grain[][] randomBoard() {
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
-                boardGrain[i][j].setId(rand.nextInt(n) + 1);
+                boardGrain[i][j].setId(rand.nextInt(n)*7 + 1);
             }
         }
         return boardGrain;
     }
 
     public Grain[][] calculate() {
+        changed = 0;
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
-                grains.add(new BoardPoint(i,j,0,boardGrain[i][j].getId()));
+                grains.add(new BoardPoint(i, j, 0, boardGrain[i][j].getId()));
             }
         }
+
         int id = 0;
-        
-        while(id<size_x*size_y){
-            //zmiana wartości ziarna...
+        int randGrain = 0;
+        int[][] tab_tmp = new int[3][3];
+        int[][] tab = new int[3][3];
+        int randomArea = 0;
+        int power = 0;
+
+        while (id < size_x * size_y) {
+            randGrain = rand.nextInt(grains.size());
+            tab = createArea(grains.get(randGrain).getX(), grains.get(randGrain).getY());
+            power = power(tab);
+
+            if (power > 0) {
+
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        tab_tmp[i][j] = tab[i][j];
+                    }
+                }
+                int loop = 0;
+                while (loop < 10) {
+                    randomArea = getRandomNeighbor(tab);
+                    tab_tmp[1][1] = randomArea;
+
+                    int power_tmp = power(tab_tmp);
+                    
+                    if (power_tmp < power) {
+                        boardGrain[grains.get(randGrain).getX()][grains.get(randGrain).getY()].setId(randomArea);
+                        changed++;
+                        break;
+                    }
+                    loop++;
+                }
+
+            }
+
+            grains.remove(randGrain);
             id++;
         }
-        
+
         return boardGrain;
     }
 
@@ -106,23 +150,17 @@ public class MonteCarlo {
         return tmp;
     }
 
-    private int area(int[][] tab) {
-
-        ArrayList<BoardPoint> once = new ArrayList<BoardPoint>();
+    private int power(int[][] tab) {
         int power = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                for (int k = 0; k < 3; k++) {
-                    for (int l = 0; l < 3; l++) {
-                        if (tab[i][j] == tab[k][l]) {
-                            power++;
-                        }
-                    }
+                if (tab[i][j] != tab[1][1]) {
+                    power++;
                 }
             }
         }
 
-        return power - 9;
+        return power;
     }
 
     private int getRandomNeighbor(int[][] tab) {
