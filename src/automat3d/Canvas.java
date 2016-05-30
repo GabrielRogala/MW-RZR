@@ -5,14 +5,19 @@ import java.awt.Graphics;
 import javax.swing.JComponent;
 
 public class Canvas extends JComponent{
-    int tab[][];
-    Grain grains[][];
+    private int tab[][];
+    private Grain grains[][];
     private boolean b = false; 
     private final int size_x = 500;
     private final int size_y = 300;
     private final int max_x = 500;
     private final int max_y = 300;
-    
+    private boolean showEdge;
+
+    public void changeShowEdge() {
+        showEdge = !showEdge;
+    }
+       
     public Canvas(){
         grains = new Grain[size_x][size_y];
         for(int i=0;i<size_x;i++){
@@ -20,10 +25,7 @@ public class Canvas extends JComponent{
                 grains[i][j] = new Grain();
             } 
         }  
-    }
-    
-    public void setB(boolean b){
-        this.b = b;
+        showEdge = false;
     }
     
     public void setGrains(Grain[][] grains){
@@ -33,7 +35,7 @@ public class Canvas extends JComponent{
     public void paint(Graphics g){
         for(int j=0;j<size_y;j++){
             for(int i=0;i<size_x;i++){
-                if(grains[i][j].getId() == 0 || (grains[i][j].isB() && b) ){
+                if(grains[i][j].getId() == 0 || (grains[i][j].isB() && showEdge) ){
                     g.setColor(Color.BLACK);
                 }else{
                     int R=0;

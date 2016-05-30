@@ -28,8 +28,13 @@ public class Board {
     private final double reA = 86710969050178.5;
     private final double reB = 9.41268203527779;
     private final double roMax = 28105600.95;
-    double ro = 0;
-    double roSr = 0;
+    private double ro = 0;
+    private double roSr = 0;
+    private double recrystalPercent;
+
+    public void setRecrystalPercent(double recrystalPercent) {
+        this.recrystalPercent = recrystalPercent;
+    }
 
     public int getCountGrainsRecristal() {
         return countGrainsRecristal;
@@ -44,6 +49,7 @@ public class Board {
     }
 
     public Board(int size_x, int size_y) {
+        recrystalPercent = 10;
         endSimulation = false;
         perio = false;
         this.size_x = size_x;
@@ -61,6 +67,7 @@ public class Board {
     }
 
     public Board() {
+        recrystalPercent = 10;
         endSimulation = false;
         perio = false;
         this.size_x = 500;
@@ -305,7 +312,7 @@ public class Board {
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
                 if (boardGrain[i][j].isB() && !boardGrain[i][j].isR()) {
-                    if (rand.nextDouble() > 0.9) { // zwiększa ro tylko 10% ziaren
+                    if (rand.nextDouble() > (1 - recrystalPercent/100)) { // zwiększa ro tylko 10% ziaren
                         boardGrain[i][j].addRo(roSr * (1.2 + rand.nextDouble() * 0.6));
                         endSimulation = false;
                     }

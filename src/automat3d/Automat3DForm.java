@@ -22,7 +22,6 @@ public class Automat3DForm extends javax.swing.JFrame {
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
                 boardGrain[i][j] = new Grain();
-
             }
         }
         initComponents();
@@ -34,6 +33,7 @@ public class Automat3DForm extends javax.swing.JFrame {
         jLabel9.setText("" + board.getCountGrainsCristal());
         canvas1.addMouseListener(handler);
         canvas1.addMouseMotionListener(handler);
+        jLabel11.setText(jSlider1.getValue()+" %");
     }
 
     @SuppressWarnings("unchecked")
@@ -47,6 +47,11 @@ public class Automat3DForm extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jSlider1 = new javax.swing.JSlider();
+        jSeparator2 = new javax.swing.JSeparator();
+        jSeparator1 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
         StartButton = new javax.swing.JButton();
         StopButton = new javax.swing.JButton();
@@ -56,6 +61,7 @@ public class Automat3DForm extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox();
         randomCombo = new javax.swing.JComboBox();
         recrystalButton = new javax.swing.JButton();
+        jToggleButton1 = new javax.swing.JToggleButton();
         jPanel3 = new javax.swing.JPanel();
         canvas1 = new automat3d.Canvas();
         jPanel6 = new javax.swing.JPanel();
@@ -86,7 +92,9 @@ public class Automat3DForm extends javax.swing.JFrame {
 
         jPanel9.setLayout(new java.awt.GridBagLayout());
 
+        jProgressBar1.setForeground(new java.awt.Color(102, 204, 255));
         jProgressBar1.setValue(50);
+        jProgressBar1.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -102,21 +110,67 @@ public class Automat3DForm extends javax.swing.JFrame {
 
         jLabel8.setText("Ilość ziaren");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 5, 2, 2);
         jPanel9.add(jLabel8, gridBagConstraints);
 
-        jLabel9.setText("jLabel9");
+        jLabel9.setText("0");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel9.add(jLabel9, gridBagConstraints);
 
+        jLabel10.setText("Rekrystalizje: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel9.add(jLabel10, gridBagConstraints);
+
+        jLabel11.setText("0 %");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPanel9.add(jLabel11, gridBagConstraints);
+
+        jSlider1.setMinimumSize(new java.awt.Dimension(100, 16));
+        jSlider1.setPreferredSize(new java.awt.Dimension(100, 16));
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 0;
+        jPanel9.add(jSlider1, gridBagConstraints);
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jSeparator2.setMinimumSize(new java.awt.Dimension(1, 20));
+        jSeparator2.setPreferredSize(new java.awt.Dimension(1, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        jPanel9.add(jSeparator2, gridBagConstraints);
+
+        jSeparator1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jSeparator1.setMinimumSize(new java.awt.Dimension(1, 20));
+        jSeparator1.setPreferredSize(new java.awt.Dimension(1, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        jPanel9.add(jSeparator1, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
         jPanel1.add(jPanel9, gridBagConstraints);
 
@@ -221,9 +275,20 @@ public class Automat3DForm extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
         jPanel2.add(recrystalButton, gridBagConstraints);
+
+        jToggleButton1.setText("B");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
+        jPanel2.add(jToggleButton1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -501,10 +566,22 @@ public class Automat3DForm extends javax.swing.JFrame {
         t.start();
     }//GEN-LAST:event_recrystalButtonActionPerformed
 
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        jLabel11.setText(jSlider1.getValue()+" %");
+        board.setRecrystalPercent(jSlider1.getValue());
+    }//GEN-LAST:event_jSlider1StateChanged
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        canvas1.changeShowEdge();
+        canvas1.repaint();
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
     private void sim() {
+
         this.jProgressBar1.setValue(0);
         simLoop = true;
         double progress = 0;
+        jProgressBar1.setForeground(Color.red);
         while (simLoop) {
 // -----------------------------------------------------------------------  
 // -----------------------Na jednym wątku ----------------------------------
@@ -517,26 +594,31 @@ public class Automat3DForm extends javax.swing.JFrame {
                     Integer.parseInt(radiusText.getText()));
 // -----------------------------------------------------------------------
             progress = (double) board.crystal() / (size_x * size_y) * 100;
+
             jProgressBar1.setValue((int) Math.round(progress));
             simLoop = board.crystal() != (size_x * size_y);
-            canvas1.setB(false);
+//            canvas1.setB(false);
             canvas1.setGrains(boardGrain);
             canvas1.repaint();
 
             if (!simLoop) {
-                canvas1.setB(true);
+//                canvas1.setB(true);
                 boardGrain = board.edge();
                 jLabel9.setText("" + board.getCountGrainsCristal());
+                jProgressBar1.setForeground(Color.green);
                 t.stop();
             }
         }
+        jProgressBar1.setForeground(Color.green);
     }
 
     private void reSim() {
         this.jProgressBar1.setValue(0);
         simLoop = true;
         double progress = 0;
+        jProgressBar1.setForeground(Color.red);
         while (simLoop) {
+            
             dT += 0.001;
             boardGrain = board.reCalculate(jComboBox1.getSelectedIndex(), dT);
             progress = (double) board.recrystal() / (size_x * size_y) * 100;
@@ -547,12 +629,14 @@ public class Automat3DForm extends javax.swing.JFrame {
             jLabel9.setText("" + board.getCountGrainsRecristal());
             if (!simLoop) {
 
-                canvas1.setB(true);
+//                canvas1.setB(true);
                 boardGrain = board.edge();
                 board.clearRecrystal();
+                jProgressBar1.setForeground(Color.green);
                 t.stop();
             }
         }
+        
     }
 
     public class HandlerClass implements MouseListener, MouseMotionListener {
@@ -683,6 +767,8 @@ public class Automat3DForm extends javax.swing.JFrame {
     private javax.swing.JLabel idLabel;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -701,6 +787,10 @@ public class Automat3DForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSlider jSlider1;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JTextField radiusText;
     private javax.swing.JComboBox randomCombo;
     private javax.swing.JTextField randomSizeText;
