@@ -31,7 +31,12 @@ public class Board {
     private double ro = 0;
     private double roSr = 0;
     private double recrystalPercent;
+    private boolean contentGrains;
 
+    public void changeContentGrains() {
+        contentGrains = !contentGrains;
+    }
+   
     public void setRecrystalPercent(double recrystalPercent) {
         this.recrystalPercent = recrystalPercent;
     }
@@ -49,6 +54,7 @@ public class Board {
     }
 
     public Board(int size_x, int size_y) {
+        contentGrains = false;
         recrystalPercent = 10;
         endSimulation = false;
         perio = false;
@@ -67,6 +73,7 @@ public class Board {
     }
 
     public Board() {
+        contentGrains = false;
         recrystalPercent = 10;
         endSimulation = false;
         perio = false;
@@ -306,14 +313,18 @@ public class Board {
 
     public Grain[][] reCalculate(int areaSetup, double dT) {
         endSimulation = true;
+        double suma = 0;
         ro = reA / reB + (1 - (reA / reB)) * Math.exp(-1 * reB * dT);
+        System.out.print(String.format("%.12f   ",ro));
         roSr = ro / (size_x * size_y);
 
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
-                if (boardGrain[i][j].isB() && !boardGrain[i][j].isR()) {
-                    if (rand.nextDouble() > (1 - recrystalPercent/100)) { // zwiększa ro tylko 10% ziaren
-                        boardGrain[i][j].addRo(roSr * (1.2 + rand.nextDouble() * 0.6));
+                
+                if ( (boardGrain[i][j].isB() || contentGrains ) && !boardGrain[i][j].isR()) {
+                    if (rand.nextDouble() > (1 - recrystalPercent/100)) { // zwiększa ro tylko % ziaren
+                        double add = roSr * (1.2 + rand.nextDouble() * 0.6);
+                        boardGrain[i][j].addRo(add);
                         endSimulation = false;
                     }
                     if (boardGrain[i][j].getRo() > roMax) {
@@ -326,10 +337,12 @@ public class Board {
                         endSimulation = false;
                     }
                 } else {
-                    boardGrain[i][j].addRo(roSr * (rand.nextDouble() * 0.3));
+                    double add = roSr * (rand.nextDouble() * 0.3);
+                    boardGrain[i][j].addRo(add);
                 }
             }
         }
+        
 
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
@@ -366,7 +379,14 @@ public class Board {
                 }
             }
         }
-
+        
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                suma += boardGrain[i][j].getRo();
+            }
+        }
+        System.out.println(String.format("%.12f",suma));
+        
         return boardGrain;
 
     }
