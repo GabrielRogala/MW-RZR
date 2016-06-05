@@ -103,7 +103,9 @@ public class MonteCarlo {
                         tab_tmp[i][j] = tab[i][j];
                     }
                 }
+
                 randomArea = getRandomNeighbor(tab);
+
                 tab_tmp[1][1] = randomArea;
 
                 int power_tmp = power(tab_tmp);
@@ -171,9 +173,19 @@ public class MonteCarlo {
     }
 
     private int getRandomNeighbor(int[][] tab) {
-        int id = rand.nextInt(8);
-        id = id > 3 ? id + 1 : id;
-        return tab[id / 3][id % 3];
+        // int id = rand.nextInt(8);
+        //id = id > 3 ? id + 1 : id;
+        //return tab[id / 3][id % 3];
+        
+        ArrayList<BoardPoint> tmp = new ArrayList<BoardPoint>();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if(!(tab[i][j]==0 || (i==1 && j==1) )){
+                    tmp.add(new BoardPoint(i,j,0,tab[i][j]));
+                }
+            }
+        }
+        return tmp.get(rand.nextInt(tmp.size())).getId();
     }
 
 }
