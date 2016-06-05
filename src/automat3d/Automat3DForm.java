@@ -19,8 +19,11 @@ public class Automat3DForm extends javax.swing.JFrame {
     private Board board;
     private boolean mC;
     private MonteCarlo monteCarlo;
+    private int time;
 
     public Automat3DForm() {
+        time = 0;
+        
         monteCarlo = new MonteCarlo();
         mC = false;
         board = new Board(size_x, size_y);
@@ -31,6 +34,7 @@ public class Automat3DForm extends javax.swing.JFrame {
             }
         }
         initComponents();
+        jLabel12.setText("Czas: " + time);
         this.jPanel5.setVisible(false);
         this.jPanel6.setVisible(false);
         this.jPanel7.setVisible(false);
@@ -58,6 +62,7 @@ public class Automat3DForm extends javax.swing.JFrame {
         jSlider1 = new javax.swing.JSlider();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel12 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         StartButton = new javax.swing.JButton();
         StopButton = new javax.swing.JButton();
@@ -118,28 +123,28 @@ public class Automat3DForm extends javax.swing.JFrame {
 
         jLabel8.setText("Ilość ziaren");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 5, 2, 2);
         jPanel9.add(jLabel8, gridBagConstraints);
 
         jLabel9.setText("0");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel9.add(jLabel9, gridBagConstraints);
 
         jLabel10.setText("Rekrystalizje: ");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel9.add(jLabel10, gridBagConstraints);
 
         jLabel11.setText("0 %");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel9.add(jLabel11, gridBagConstraints);
@@ -152,7 +157,7 @@ public class Automat3DForm extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 0;
         jPanel9.add(jSlider1, gridBagConstraints);
 
@@ -161,7 +166,7 @@ public class Automat3DForm extends javax.swing.JFrame {
         jSeparator2.setMinimumSize(new java.awt.Dimension(1, 20));
         jSeparator2.setPreferredSize(new java.awt.Dimension(1, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         jPanel9.add(jSeparator2, gridBagConstraints);
@@ -170,10 +175,17 @@ public class Automat3DForm extends javax.swing.JFrame {
         jSeparator1.setMinimumSize(new java.awt.Dimension(1, 20));
         jSeparator1.setPreferredSize(new java.awt.Dimension(1, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
         jPanel9.add(jSeparator1, gridBagConstraints);
+
+        jLabel12.setText("czas: 0");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        jPanel9.add(jLabel12, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -502,6 +514,8 @@ public class Automat3DForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
+        time = 0;
+        jLabel12.setText("Czas: " + time);
         if (t != null) {
             t.stop();
         }
@@ -546,6 +560,8 @@ public class Automat3DForm extends javax.swing.JFrame {
     }//GEN-LAST:event_BCsButtonActionPerformed
 
     private void ClearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearButtonActionPerformed
+        time = 0;
+        jLabel12.setText("Czas: " + time);
         boardGrain = board.clear();
         canvas1.setGrains(boardGrain);
         canvas1.repaint();
@@ -595,6 +611,8 @@ public class Automat3DForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1PopupMenuWillBecomeInvisible
 
     private void recrystalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recrystalButtonActionPerformed
+        time = 0;
+        jLabel12.setText("Czas: " + time);
         if (t != null) {
             t.stop();
         }
@@ -632,6 +650,8 @@ public class Automat3DForm extends javax.swing.JFrame {
         if (mC) {
             simLoop = true;
             while (simLoop) {
+                time++;
+                jLabel12.setText("Czas: " + time);
                 boardGrain = monteCarlo.calculate();
                 canvas1.setGrains(boardGrain);
                 canvas1.repaint();
@@ -648,6 +668,8 @@ public class Automat3DForm extends javax.swing.JFrame {
             double progress = 0;
             jProgressBar1.setForeground(Color.red);
             while (simLoop) {
+                time++;
+                jLabel12.setText("Czas: " + time);
                 try {
                     Thread.sleep(30);
                 } catch (InterruptedException ex) {
@@ -690,6 +712,8 @@ public class Automat3DForm extends javax.swing.JFrame {
             monteCarlo = new MonteCarlo(size_x, size_y, boardGrain);
             simLoop = true;
             while (simLoop) {
+                time++;
+                jLabel12.setText("Czas: " + time);
                 boardGrain = monteCarlo.calculate();
                 canvas1.setGrains(boardGrain);
                 canvas1.repaint();
@@ -706,6 +730,8 @@ public class Automat3DForm extends javax.swing.JFrame {
             double progress = 0;
             jProgressBar1.setForeground(Color.red);
             while (simLoop) {
+                time++;
+                jLabel12.setText("Czas: " + time);
                 try {
                     Thread.sleep(30);
                 } catch (InterruptedException ex) {
@@ -863,6 +889,7 @@ public class Automat3DForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -27,7 +27,7 @@ public class MonteCarlo {
         rand = new Random();
         grains = new ArrayList<BoardPoint>();
     }
-    
+
     public void changePerio() {
         this.perio = !perio;
     }
@@ -70,7 +70,7 @@ public class MonteCarlo {
     public Grain[][] randomBoard() {
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
-                boardGrain[i][j].setId(rand.nextInt(n)*7 + 1);
+                boardGrain[i][j].setId(rand.nextInt(n) * 7 + 1);
             }
         }
         return boardGrain;
@@ -103,23 +103,16 @@ public class MonteCarlo {
                         tab_tmp[i][j] = tab[i][j];
                     }
                 }
-                int loop = 0;
-                while (loop < 10) {
-                    randomArea = getRandomNeighbor(tab);
-                    tab_tmp[1][1] = randomArea;
+                randomArea = getRandomNeighbor(tab);
+                tab_tmp[1][1] = randomArea;
 
-                    int power_tmp = power(tab_tmp);
-                    
-                    if (power_tmp < power) {
-                        boardGrain[grains.get(randGrain).getX()][grains.get(randGrain).getY()].setId(randomArea);
-                        changed++;
-                        break;
-                    }
-                    loop++;
+                int power_tmp = power(tab_tmp);
+
+                if (power_tmp < power) {
+                    boardGrain[grains.get(randGrain).getX()][grains.get(randGrain).getY()].setId(randomArea);
+                    changed++;
                 }
-
             }
-
             grains.remove(randGrain);
             id++;
         }
