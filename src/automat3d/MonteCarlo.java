@@ -68,11 +68,31 @@ public class MonteCarlo {
     }
 
     public Grain[][] randomBoard() {
-        for (int i = 0; i < size_x; i++) {
-            for (int j = 0; j < size_y; j++) {
-                boardGrain[i][j].setId(rand.nextInt(n) * 7 + 1);
+        if (n == 0) {
+
+            ArrayList<BoardPoint> tmp = new ArrayList<BoardPoint>();
+            for (int i = 0; i < size_x; i++) {
+                for (int j = 0; j < size_y; j++) {
+                    tmp.add(new BoardPoint(i, j, 0, 0));
+                }
+            }
+
+            for (int i = 0; i < size_x * size_y; i++) {
+                int rand_id = rand.nextInt(tmp.size());
+                int rand_x = tmp.get(rand_id).getX();
+                int rand_y = tmp.get(rand_id).getY();;
+                boardGrain[rand_x][rand_y].setId(i + 1);
+                tmp.remove(rand_id);
+            }
+
+        } else {
+            for (int i = 0; i < size_x; i++) {
+                for (int j = 0; j < size_y; j++) {
+                    boardGrain[i][j].setId(rand.nextInt(n) * 7 + 1);
+                }
             }
         }
+
         return boardGrain;
     }
 
@@ -110,7 +130,7 @@ public class MonteCarlo {
 
                 int power_tmp = power(tab_tmp);
 
-                if (power_tmp < power) {
+                if (power_tmp <= power) {
                     boardGrain[grains.get(randGrain).getX()][grains.get(randGrain).getY()].setId(randomArea);
                     changed++;
                 }
@@ -176,12 +196,12 @@ public class MonteCarlo {
         // int id = rand.nextInt(8);
         //id = id > 3 ? id + 1 : id;
         //return tab[id / 3][id % 3];
-        
+
         ArrayList<BoardPoint> tmp = new ArrayList<BoardPoint>();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if(!(tab[i][j]==0 || (i==1 && j==1) )){
-                    tmp.add(new BoardPoint(i,j,0,tab[i][j]));
+                if (!(tab[i][j] == 0 || (i == 1 && j == 1))) {
+                    tmp.add(new BoardPoint(i, j, 0, tab[i][j]));
                 }
             }
         }
